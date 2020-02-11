@@ -11,3 +11,25 @@
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+DROP TABLE IF EXISTS datos;
+
+CREATE TABLE datos (letra       STRING,
+                   fecha       STRING,
+                   numero      INT
+                  )
+
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
+LOAD DATA INPATH '/tmp/output/data.tsv' OVERWRITE
+INTO TABLE datos;
+
+DROP TABLE IF EXISTS resultado;
+
+CREATE TABLE resultado
+AS
+SELECT  letra,
+        COUNT (letra)
+FROM 
+    datos
+GROUP BY 
+    letra
+;

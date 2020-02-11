@@ -39,3 +39,27 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+DROP TABLE IF EXISTS dos_join;
+
+CREATE TABLE dos_join
+AS
+
+SELECT t0.c1,
+       t0.c2,
+       tt1.val
+
+FROM tbl0 t0
+
+JOIN (SELECT c1,
+            key,
+            val
+      FROM  tbl1
+      LATERAL VIEW explode(c4) tbl1 AS key, val
+     ) tt1
+
+ON (tt1.c1 = t0.c1 AND tt1.key = t0.c2)
+;
+
+INSERT OVERWRITE DIRECTORY '/tmp/output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM dos_join;

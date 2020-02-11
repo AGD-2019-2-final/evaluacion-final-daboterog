@@ -27,3 +27,13 @@ fs -rm -f -r output;
 -- 
 --  >>> Escriba su respuesta a partir de este punto <<<
 -- 
+data_truck = LOAD 'truck_event_text_partition.csv' USING PigStorage(',')
+    AS (driverId:INT, truckId:INT, eventTime:CHARARRAY, eventType:CHARARRAY, longitude:DOUBLE, 
+        latitude:DOUBLE, eventKey:CHARARRAY, correlationId:CHARARRAY, driverName:CHARARRAY, 
+        routeId:INT, routeName:CHARARRAY, eventDate:CHARARRAY
+       );
+
+campos = FOREACH data_truck GENERATE driverId, truckId, eventTime;
+topi = LIMIT campos 10;
+ordena = ORDER topi BY driverId, (truckId desc), eventTime;
+STORE ordena INTO 'output' USING PigStorage(',');

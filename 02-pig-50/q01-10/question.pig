@@ -9,3 +9,11 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+data = LOAD 'data.tsv'
+    AS (letra:CHARARRAY, fecha:CHARARRAY, num:INT);
+
+campos = FOREACH data GENERATE letra, num;
+agrupa = GROUP campos BY letra;
+cuenta = FOREACH agrupa GENERATE group, COUNT(campos.num);
+STORE cuenta INTO 'output';

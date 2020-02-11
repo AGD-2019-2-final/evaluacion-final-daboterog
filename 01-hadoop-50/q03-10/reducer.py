@@ -1,4 +1,7 @@
 import sys
-#
-# >>> Escriba el codigo del reducer a partir de este punto <<<
-#
+if __name__ == "__main__":
+    
+    for i in sys.stdin:
+        clave, valor = i.split("#")
+        sys.stdout.write("{}\n".format(valor.rstrip())) 
+ 

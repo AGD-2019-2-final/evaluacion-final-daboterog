@@ -24,3 +24,20 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+
+DROP TABLE IF EXISTS resultado;
+
+CREATE TABLE resultado
+AS
+SELECT key,
+       COUNT (key)
+FROM (
+      SELECT key
+      FROM  t0 LATERAL VIEW explode(c3) t0 AS key, val
+     ) t
+GROUP BY key
+;
+
+INSERT OVERWRITE DIRECTORY '/tmp/output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM resultado;

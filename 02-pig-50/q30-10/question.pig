@@ -41,3 +41,33 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+data = LOAD 'data.csv' USING PigStorage(',')
+    AS (f1:INT, f2:CHARARRAY, f3:CHARARRAY, f4:CHARARRAY, f5:CHARARRAY, f6:INT);
+DUMP data;
+a = FOREACH data GENERATE f4, ToDate(f4,'yyyy-MM-dd') AS fecha;
+DUMP a;
+b = FOREACH a GENERATE f4, fecha, ToString(fecha, 'EEE') AS dia;
+DUMP b;
+c = FOREACH b GENERATE f4, ToString(fecha, 'dd'), GetDay(fecha), (
+case dia
+when 'Mon' then 'lun'
+when 'Tue' then 'mar'
+when 'Wed' then 'mie'
+when 'Thu' then 'jue'
+when 'Fri' then 'vie'
+when 'Sat' then 'sab'
+when 'Sun' then 'dom'
+END
+) AS nombre_corto, (
+case dia
+when 'Mon' then 'lunes'
+when 'Tue' then 'martes'
+when 'Wed' then 'miercoles'
+when 'Thu' then 'jueves'
+when 'Fri' then 'viernes'
+when 'Sat' then 'sabado'
+when 'Sun' then 'domingo'
+END    
+) AS nombre_largo;
+DUMP c;
+STORE c INTO 'output' USING PigStorage (',');

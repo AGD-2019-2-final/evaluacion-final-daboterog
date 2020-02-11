@@ -40,4 +40,22 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+DROP TABLE IF EXISTS resultado;
+
+CREATE TABLE resultado
+AS 
+SELECT mayus
+FROM(
+    SELECT c1,
+            collect_list(UPPER(letras)) AS mayus
+    FROM tbl0
+    LATERAL VIEW explode(c5) tbl0 AS letras
+    GROUP BY c1
+) t0
+;
+
+INSERT OVERWRITE DIRECTORY '/tmp/output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY ':'
+SELECT * FROM resultado;
 

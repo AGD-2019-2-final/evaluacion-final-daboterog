@@ -28,3 +28,11 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+data = LOAD 'data.csv' USING PigStorage(',')
+    AS (f1:INT, f2:CHARARRAY, f3:CHARARRAY, f4:CHARARRAY, f5:CHARARRAY, f6:INT);
+DUMP data;
+a = FOREACH data GENERATE f2, f5;
+DUMP a;
+b = FILTER a BY NOT f5 MATCHES '^b.*';
+DUMP b;
+STORE b INTO 'output' USING PigStorage(',');

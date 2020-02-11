@@ -29,4 +29,9 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-
+data = LOAD 'data.csv' USING PigStorage(',')
+    AS (f1:INT, f2:CHARARRAY, f3:CHARARRAY, f4:CHARARRAY, f5:CHARARRAY, f6:INT);
+DUMP data;
+a = FOREACH data GENERATE SUBSTRING(f4,0,4), SUBSTRING(f4,2,4);
+DUMP a;
+STORE a INTO 'output' USING PigStorage (',');
